@@ -1,6 +1,6 @@
 # Project Skills - AI 可读的项目知识管理工具集
 
-一套为 Claude Code 设计的项目知识管理 Skills，帮助 AI 和人类更好地理解、维护和演进项目。
+一套通用的项目知识管理 Skills，适用于所有支持 AGENTS.md 规范的 AI 工具（如 Claude Code、Cursor、Windsurf 等），帮助 AI 和人类更好地理解、维护和演进项目。
 
 ## 核心理念
 
@@ -113,16 +113,23 @@ docs/ai-context/
 
 ### 场景 1：新项目或首次使用
 
+**在 Claude Code 中**：
 ```bash
-# 1. 调用 project-init 建立知识库
+# 调用 project-init 建立知识库
 /project-init
 
-# 2. 查看生成的文档
+# 查看生成的文档
 ls AGENTS.md docs/ai-context/
 ```
 
+**在其他 AI 工具中**：
+- 如果工具支持自定义 skills/agents，导入对应的 SKILL.md
+- 如果工具只识别 AGENTS.md，可以手动参考本工具集的指令来指导 AI
+- 参考 `docs/ai-context/core-methodology.md` 了解核心方法论
+
 ### 场景 2：日常开发后同步
 
+**在 Claude Code 中**：
 ```bash
 # 完成功能开发后
 /project-sync
@@ -131,32 +138,40 @@ ls AGENTS.md docs/ai-context/
 /project-sync
 ```
 
+**在其他 AI 工具中**：
+- 告诉 AI："按照 project-sync 的方式同步项目知识"
+- 或直接说："基于 git diff 更新 docs/ai-context/ 中受影响的文档"
+
 ### 场景 3：感觉迷茫或重大决策前
 
+**在 Claude Code 中**：
 ```bash
 # 1. 先用 god-view 战略分析
 /god-view
 
 # 2. 根据 god-view 的建议，调用对应 skill
-# 如果建议初始化知识库
-/project-init
-
-# 如果建议同步文档
-/project-sync
-
-# 如果建议审查健康度
-/project-review
+/project-init   # 如果建议初始化知识库
+/project-sync   # 如果建议同步文档
+/project-review # 如果建议审查健康度
 ```
+
+**在其他 AI 工具中**：
+- 告诉 AI："用上帝视角分析项目，识别主要矛盾"
+- 或直接说："用第一性原理+主要矛盾论+极简主义分析项目"
 
 ### 场景 4：周期性健康检查
 
+**在 Claude Code 中**：
 ```bash
 # 每月或每季度
 /project-review
 
 # 如果发现问题，执行推荐的修复
-/project-sync  # 应用安全的文档更新
+/project-sync
 ```
+
+**在其他 AI 工具中**：
+- 告诉 AI："审查项目知识健康度，检查文档是否匹配代码"
 
 ## 工作流闭环
 
@@ -349,6 +364,29 @@ skills/
 └── README.md              # 本文件
 ```
 
+## 兼容性
+
+本工具集遵循 AGENTS.md 规范，兼容所有支持该规范的 AI 开发工具：
+
+### ✅ 已验证支持
+- **Claude Code** - Anthropic 官方 CLI 工具
+- **Cursor** - AI-first 代码编辑器
+- **Windsurf** - AI 协作开发环境
+
+### 📋 理论支持
+任何识别 `AGENTS.md` 文件作为项目指令的 AI 工具都可以使用本工具集。
+
+### 🔧 如何使用
+
+本工具集提供双文件名支持：
+- **AGENTS.md** - 主文件，供通用 AI 工具识别
+- **CLAUDE.md** - 符号链接指向 AGENTS.md，供 Claude Code 识别
+
+在你自己的项目中使用时：
+1. 创建 `AGENTS.md` 作为主文件
+2. 可选：创建符号链接 `CLAUDE.md -> AGENTS.md`（如果使用 Claude Code）
+3. 按照本工具集的知识结构组织 `docs/ai-context/`
+
 ## 适用项目类型
 
 本工具集设计为通用工具，适用于：
@@ -378,6 +416,13 @@ skills/
 - **自动生成**：从代码生成，但无法捕捉决策背景
 - **本工具集**：记录代码无法自解释的上下文
 
+### vs 其他 AI 项目文档工具
+- **本工具集特点**：
+  - ✅ 通用规范（AGENTS.md），不绑定特定 AI 工具
+  - ✅ 融合方法论（第一性原理+主要矛盾论+极简主义）
+  - ✅ 战略+执行双层架构（god-view + init/sync/review）
+  - ✅ 强调知识同步，而非一次性生成
+
 ## 最佳实践
 
 ### DO ✅
@@ -399,6 +444,17 @@ skills/
 - ❌ 不要基于惯例而不思考根本需求
 
 ## 常见问题
+
+### Q: 只能在 Claude Code 中使用吗？
+A: 不是。本工具集遵循 AGENTS.md 规范，可以在任何支持该规范的 AI 工具中使用（如 Cursor、Windsurf 等）。Claude Code 的 `/skill` 命令只是一种调用方式，你也可以直接告诉其他 AI 工具按照这些指令工作。
+
+### Q: 如何在 Cursor/Windsurf 等工具中使用？
+A: 有两种方式：
+1. **如果工具支持自定义 skills**：导入对应的 SKILL.md 文件
+2. **如果工具只识别 AGENTS.md**：在你的项目 AGENTS.md 中引用本工具集的方法论和指令，然后直接对话告诉 AI 要做什么（如"用上帝视角分析项目"）
+
+### Q: AGENTS.md 和 CLAUDE.md 有什么区别？
+A: AGENTS.md 是通用规范，被多种 AI 工具支持。CLAUDE.md 是 Claude Code 的专属文件名。本项目中 CLAUDE.md 是指向 AGENTS.md 的符号链接，确保两种工具都能识别。
 
 ### Q: 和 project-init/sync/review 有什么区别？
 A: god-view 是战略层工具，只识别问题和提供方向，不执行具体操作。project-init/sync/review 是执行层工具，负责具体的文档创建、更新和审查。
