@@ -1,6 +1,6 @@
 ---
 name: god-view-en
-version: 1.0.0
+version: 1.1.0
 description: God-view project analysis. Use before major decisions, architecture adjustments, large features, or when direction is unclear; integrates "First Principles + Theory of Contradictions + Minimalism" to identify core problems, distinguish principal from secondary contradictions, provide high-leverage solutions; focus on maximum value, not equal effort distribution.
 ---
 
@@ -166,6 +166,7 @@ Use four-quadrant method to analyze all problems, identify 1-3 principal contrad
 | Technical Debt | Code hard to read, duplicated, confusing names | Usually secondary | Medium-Low |
 | Unclear Direction | Team understanding of goals inconsistent | Lack of top-level design | Extremely High |
 | Over-design | Too many abstraction levels, high understanding cost | Violates minimalism | Medium |
+| Fallback masking | System runs but results are quietly wrong; bugs hard to reproduce | AI's reflexive silent fallbacks trade observability for "not crashing" — two negatives look like a positive | High |
 
 **Contradiction Transformation Patterns**:
 

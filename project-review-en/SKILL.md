@@ -158,6 +158,17 @@ Classify debt by risk and recommended owner:
 - `Needs approval`: meaningful behavior, architecture, or cross-cutting change
 - `Human decision`: direction, product, or major architectural judgment
 
+### 5.1 Audit whether silent fallbacks mask bugs
+
+AI-assisted development has a systematic bias: it tends to produce code that *looks* robust rather than code that *reveals the truth*. A silent fallback (default value, empty object, bare catch, silent retry) flattens two fundamentally different situations:
+
+- **Expected variation** (missing external input, transient network failure): should be handled explicitly at the system boundary.
+- **Broken internal invariant** (a state that should be impossible): this is a bug and must surface early and loudly.
+
+One silent fallback turns a bug into a plausible empty state or default result; the next layer reads it as "normal," and the bug gets buried — the system runs but the result is quietly wrong. Core principle: **fail fast, fail loud** — no fallbacks in internal logic by default; fallbacks belong only at system boundaries and must be explicit, logged, and commented.
+
+Audit this as a distinct technical-debt dimension: scan each swallowed `catch`, `.get(k, default)`, `?? / ||` default, and silent retry, and for every one ask — is this empty/failed case expected, or could it be a bug? Anything you cannot answer is a risk. Record masking fallbacks as technical debt, recommend "fail fast / add an assertion / let the exception propagate and log it," and classify as `AI-safe` / `Needs approval` / `Human decision`.
+
 ### 6. Evaluate decision hygiene
 
 Review whether important decisions are captured.

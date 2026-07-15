@@ -153,6 +153,20 @@ When technical debt is directly related to the changed area and safe to address,
 
 Only fix low-risk technical debt directly when the user explicitly asks or when the issue is part of this AI-context documentation synchronization. Any cleanup must stay small, local, reversible, and aligned with existing design.
 
+### 5.1 Watch for silent fallbacks introduced by this change
+
+AI-assisted development has a systematic bias: it tends to produce code that *looks* robust rather than code that *reveals the truth*. A silent fallback (default value, empty object, bare catch, silent retry) flattens two fundamentally different situations:
+
+- **Expected variation** (missing external input, transient network failure): should be handled explicitly at the system boundary.
+- **Broken internal invariant** (a state that should be impossible): this is a bug and must surface early and loudly.
+
+One silent fallback turns a bug into a plausible empty state or default result; the next layer reads it as "normal," and the bug gets buried — the system runs but the result is quietly wrong. Core principle: **fail fast, fail loud** — no fallbacks in internal logic by default; fallbacks belong only at system boundaries and must be explicit, logged, and commented.
+
+In this sync:
+
+- Check whether the diff introduces new fallbacks. If so, judge whether each covers an expected case (fine) or could mask a broken internal invariant (dangerous); report the latter as low-risk technical debt and recommend surfacing it with an assertion or explicit handling, with a comment stating which case it covers.
+- During validation, do not settle for "no errors thrown." Running is not the same as correct — assert real values where you can, so a fallback cannot disguise a failure as success and pass the bug through validation.
+
 ### 6. Escalate higher-risk work to the human
 
 If you identify larger issues, report them rather than fixing them automatically.

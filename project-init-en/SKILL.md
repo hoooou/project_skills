@@ -234,6 +234,25 @@ When multiple plans are reasonable, prefer presenting:
 
 Explain each plan’s conditions, cost, risk, and why one might reject it. The recommended plan should be based on current project evidence, not generic best practices.
 
+### 11. Watch for silent fallbacks that mask bugs
+
+AI-assisted development has a systematic bias: it tends to produce code that *looks* robust rather than code that *reveals the truth*. Not crashing feels like task done, and a silent fallback (default value, empty object, bare catch, silent retry) is the cheapest way to get there.
+
+The danger is that a fallback flattens two fundamentally different situations:
+
+- **Expected variation** (missing external input, transient network failure): should be handled explicitly at the system boundary.
+- **Broken internal invariant** (a state that should be impossible): this is a bug and must surface early and loudly.
+
+One silent fallback turns a bug (a negative) into a plausible empty state or default result (a positive); the next layer's fallback reads that as "normal," and the bug gets buried — the system runs but the result is quietly wrong.
+
+Core principle: **fail fast, fail loud**. Do not add fallbacks to internal logic by default; fallbacks belong only at system boundaries, and each must be explicit, logged, and commented with which expected case it covers. Surface broken invariants with assertions instead of hiding them behind defaults.
+
+Actions in this skill:
+
+- Record this principle in the "AI working rules" section of `AGENTS.md` as project-level coding discipline.
+- While exploring, catalog existing silent fallbacks (swallowed `catch`, `.get(k, default)`, `?? / ||` defaults, silent retries) as gotchas or risk points, noting for each whether it covers an expected case or may be masking a bug; flag the latter for human confirmation.
+- During initialization, only record and flag these fallbacks — do not modify them.
+
 ## Boundaries
 
 You may:

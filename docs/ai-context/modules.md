@@ -1,71 +1,140 @@
-# 模块说明
+# 模块
 
-## 模块总览
+## 主要模块概览
 
-| 模块 | 关键文件 | 主要职责 | 关系 |
-| --- | --- | --- | --- |
-| `project-init` | `project-init/SKILL.md` | 建立 AI 可读项目知识库基线。 | 工作流闭环的起点。 |
-| `project-sync` | `project-sync/SKILL.md` | 在项目发生有意义变更后同步项目知识。 | 依赖 `project-init` 建立的知识结构。 |
-| `project-review` | `project-review/SKILL.md` | 审查项目知识是否匹配当前项目现实。 | 可在多次同步后检查漂移。 |
-| `project-init-en` | `project-init-en/SKILL.md` | `project-init` 的英文版本。 | 与中文版本语义对应。 |
-| `project-sync-en` | `project-sync-en/SKILL.md` | `project-sync` 的英文版本。 | 与中文版本语义对应。 |
-| `project-review-en` | `project-review-en/SKILL.md` | `project-review` 的英文版本。 | 与中文版本语义对应。 |
-| `docs/ai-context` | 本目录下 Markdown 文件 | 为未来 AI 和人类维护者记录当前项目事实。 | 补充而不替代各 skill 入口文档。 |
-| `docs/ai-context/features.md` | `docs/ai-context/features.md` | 记录灵光一现、不重要不紧急、长期目标、不影响短期目标、顿悟、性能收益巨大或人性化设计收益巨大的候选需求、功能和优化点。 | 属于 AI-context；不是路线图或决策记录。 |
+该项目包含 6 个技能模块目录,每个技能有中英文两个版本:
 
-## `project-init`
+| 技能名称 | 中文版目录 | 英文版目录 | 版本 |
+|---------|----------|----------|-----|
+| 项目初始化 | `project-init/` | `project-init-en/` | 1.0.1 |
+| 项目审查 | `project-review/` | `project-review-en/` | 1.0.1 |
+| 项目同步 | `project-sync/` | `project-sync-en/` | 1.0.1 |
 
-- 用途：首次接手新项目或缺少 AI-context 时，创建 `AGENTS.md` 和 `docs/ai-context/`。
-- 关键职责：只读探索、识别技术栈、总结模块、创建知识库、记录未知项、提出建议。
-- 重要边界：不改变产品方向，不替人做重大架构决策，不在初始化阶段大规模改代码。
-- 稳定性：当前文档结构完整，职责清晰。
+## project-init (项目初始化)
 
-## `project-sync`
+**目录**: `project-init/` (中文), `project-init-en/` (英文)
 
-- 用途：在功能、修复、重构、API/数据库/集成变更后，同步项目知识。
-- 关键职责：分析当前变更集、判断影响范围、更新受影响文档、维护决策记录、提醒低风险技术债。
-- 重要边界：默认不修改代码；高风险重构、API 重设、产品行为变化需要人批准。
-- 稳定性：当前文档结构完整，职责清晰。
+**职责**:
+- 为新项目或已有项目建立 AI 可读的知识库
+- 创建标准化的项目文档结构 (AGENTS.md, docs/ai-context/)
+- 分析项目结构、技术栈、模块关系
+- 记录数据库、API、数据流等关键信息
+- 收集需求、功能想法和优化机会到 features.md
 
-## `project-review`
+**关键文件**:
+- `SKILL.md`: 435 行完整技能定义
 
-- 用途：审查 AI 可读项目知识健康度，发现缺失、过期、误导或漂移。
-- 关键职责：盘点项目知识、对比文档和代码、找出知识缺口、发现技术债、评估决策卫生度。
-- 重要边界：审查阶段不自动大规模修改文档或代码，不替人制定战略。
-- 稳定性：当前文档结构完整，职责清晰。
+**触发时机**:
+- 项目缺少 AI 可读上下文文档
+- 首次在已有项目中使用 Claude Code
+- 现有文档零散或过期
+- 准备重大功能开发或重构前
 
-## 英文模块
+**与其他模块的关系**:
+- **被 project-sync 依赖**: 同步技能需要初始化建立的文档结构
+- **被 project-review 依赖**: 审查技能需要初始化建立的基线
+- **独立性**: 可单独使用,不依赖其他技能
 
-英文模块提供对应工作流的英文版本。当前可观察到三组英文目录：
+## project-review (项目审查)
 
-- `project-init-en`
-- `project-sync-en`
-- `project-review-en`
+**目录**: `project-review/` (中文), `project-review-en/` (英文)
 
-Unknown：项目未记录双语版本同步原则。建议未来明确：
+**职责**:
+- 审查项目知识健康度
+- 检查文档与代码的一致性
+- 发现缺失、过期或误导性信息
+- 评估 features.md 中条目的有效性
+- 识别技术债和架构问题
+- 提供分类建议 (AI-safe / 需批准 / 需人决策)
 
-- 是否要求中文和英文完全等价。
-- 是否允许英文版本省略或调整某些中文表达。
-- 修改任一语言版本后是否必须同步另一版本。
+**关键文件**:
+- `SKILL.md`: 约 400+ 行技能定义 (需确认实际行数)
+
+**触发时机**:
+- 项目持续变化一段时间后
+- 计划重大功能或架构调整前
+- 新成员或 AI Agent 加入前
+- 作为周期性维护
+- 多次 project-sync 后检查知识漂移
+
+**与其他模块的关系**:
+- **依赖 project-init**: 需要已初始化的知识库结构
+- **为 project-sync 提供输入**: 审查发现的问题可指导后续同步工作
+- **与 project-sync 形成闭环**: 审查 → 发现问题 → 同步修复 → 再审查
+
+## project-sync (项目同步)
+
+**目录**: `project-sync/` (中文), `project-sync-en/` (英文)
+
+**职责**:
+- 在代码变更后同步项目知识
+- 基于 git diff 判断影响范围
+- 更新受影响的文档 (architecture, modules, data-flow, database, api, features)
+- 同步 AGENTS.md 中的工作规则
+- 更新决策记录
+- 识别并提醒低风险技术债
+
+**关键文件**:
+- `SKILL.md`: 约 400+ 行技能定义 (需确认实际行数)
+
+**触发时机**:
+- 功能完成后
+- Bug fix 改变重要行为后
+- 重构改变模块边界后
+- 数据库/API/集成变化后
+- commit 或 PR 前
+
+**与其他模块的关系**:
+- **依赖 project-init**: 需要已初始化的知识库结构
+- **被 project-review 评估**: 审查技能会检查同步的有效性
+- **高频使用**: 是三个技能中使用频率最高的
+
+## 通用文档模块 (docs/ai-context/)
+
+**目录**: `docs/ai-context/`
+
+**职责**:
+- 本项目自身的 AI 可读文档
+- 为 AI Agent 提供项目上下文
+- 记录架构、模块、数据流等信息
+
+**关键文件**:
+- `architecture.md`: 架构说明
+- `modules.md`: 本文件,模块说明
+- `data-flow.md`: 数据流说明 (待创建)
+- `database.md`: 数据库说明 (不适用于本项目)
+- `api.md`: API 说明 (不适用于本项目)
+- `features.md`: 功能想法和优化点
+- `decisions/`: 决策记录目录
+
+**稳定性**: 该模块应随项目演进持续更新
 
 ## 模块依赖关系
 
 ```text
+依赖关系 (从被依赖到依赖):
+
 project-init
-  -> creates baseline knowledge
-project-sync
-  -> updates baseline after meaningful changes
-project-review
-  -> audits baseline and project reality
+    ↑
+    ├─── project-sync (依赖初始化的结构)
+    └─── project-review (依赖初始化的基线)
+         ↑
+         └─── project-sync (参考审查结果优化同步)
+
+循环反馈:
+init → sync → review → sync → ...
 ```
 
-`docs/ai-context` 记录这些关系，帮助未来 AI 更快理解项目，但每个 `SKILL.md` 仍应保持独立可执行。
+## 所有权和稳定性
 
-`features.md` 记录候选想法和优化机会，供 `project-sync` 后续同步、供 `project-review` 周期性判断是否仍有必要保留。
+| 模块 | 所有权 | 稳定性 | 说明 |
+|-----|-------|-------|-----|
+| project-init | 核心 | 稳定 | 基础技能,变更应谨慎 |
+| project-review | 核心 | 稳定 | 审查逻辑相对固定 |
+| project-sync | 核心 | 演进中 | 可能随用户反馈调整 |
+| docs/ai-context | 元数据 | 演进中 | 应持续反映项目现状 |
 
-## 所有权和不确定性
-
-- Owner：Unknown，项目文件未记录维护者。
-- 发布所有权：Unknown。
-- 版本策略：Unknown。
-- 自动验证：Not found。
+**不确定性说明**:
+- 技能的版本号管理策略尚未明确
+- 中英文版本的同步更新机制待确定
+- 未来是否会新增更多技能尚不明确
